@@ -56,7 +56,7 @@ async function updateProfile() {
 async function signOut() {
     try {
         loading.value = true
-        let { error } = await supabase.auth.signOut()
+        let { error } = await supabaseClient.auth.signOut()
         if (error) throw error
     } catch (error) {
         alert(error.message)
