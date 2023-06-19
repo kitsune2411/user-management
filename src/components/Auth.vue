@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { supabaseClient } from "../supabase";
+import { supabaseClient } from "../supabase"
 
 const loading = ref(false)
 const email = ref('')
@@ -11,6 +11,19 @@ const handleLogin = async () => {
         const { error } = await supabaseClient.auth.signInWithOtp({ email: email.value })
         if (error) throw error
         alert('Check your email for the login link!')
+    } catch (error) {
+        if (error instanceof Error) alert(error.message)
+        console.error(error)
+    } finally {
+        loading.value = false
+    }
+}
+
+const loginWithGoogle = async () => {
+    try {
+        loading.value = true
+        const { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' })
+        if (error) throw error
     } catch (error) {
         if (error instanceof Error) alert(error.message)
         console.error(error)
@@ -29,7 +42,12 @@ const handleLogin = async () => {
                 <input type="email" placeholder="example@gmail.com" v-model="email" class="inputField">
             </div>
             <div class="">
-                <input type="submit" class="button block" :value="loading ? 'Loading...' : 'Send magic link'" :disabled="loading">
+                <input type="submit" class="button block" :value="loading ? 'Loading...' : 'Send magic link'"
+                    :disabled="loading">
+            </div>
+            <div class="">
+                <input type="button" @click="loginWithGoogle" class="button block"
+                    :value="loading ? 'Loading...' : 'Continue with Google'" :disabled="loading">
             </div>
         </div>
     </form>
