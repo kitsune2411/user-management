@@ -15,7 +15,7 @@ async function getProfile() {
     try {
         loading.value = true
         const { user } = session.value
-        let { status, data, error } = await supabaseClient.from('profile').select(`username, website, avatar_url`).eq('id', user.id).single()
+        let { status, data, error } = await supabaseClient.from('profiles').select(`username, website, avatar_url`).eq('id', user.id).single()
         if (error && status !== 406) throw error
         if (data) {
             username.value = data.username
@@ -43,7 +43,7 @@ async function updateProfile() {
             updated_at: new Date(),
         }
 
-        let { error } = await supabaseClient.from('profile').upsert(updates)
+        let { error } = await supabaseClient.from('profiles').upsert(updates)
         if (error) throw error
     } catch (error) {
         alert(error.message)
