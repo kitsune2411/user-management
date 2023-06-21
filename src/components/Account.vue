@@ -65,6 +65,10 @@ async function signOut() {
     }
 }
 
+onMounted(() => {
+    getProfile()
+}),
+
 
 </script>
 
