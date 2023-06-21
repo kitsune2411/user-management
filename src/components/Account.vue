@@ -6,10 +6,10 @@ import Avatar from './Avatar.vue'
 const props = defineProps(['session'])
 const { session } = toRefs(props)
 
-const loading = ref(false)
-const username = ref('')
-const website = ref('')
-const avatar_url = ref('')
+let loading = ref(false)
+let username = ref('')
+let website = ref('')
+let avatar_url = ref('')
 
 async function getProfile() {
     try {
@@ -32,7 +32,7 @@ async function getProfile() {
 
 async function updateProfile() {
     try {
-        loading.values = true
+        loading.value = true
         const { user } = session.value
 
         const updates = {
