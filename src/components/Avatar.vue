@@ -12,9 +12,14 @@ const files = ref()
 
 const downloadImage = async () => {
     try {
-        const { data, error } = await supabaseClient.storage.from('avatar').download(path.value)
-        if (error) throw error
-        src.value = URL.createObjectURL(data)
+        const isAbsoluteURL = path.value.indexOf('http://') === 0 || path.value.indexOf('https://') === 0
+        if (isAbsoluteURL) {
+            src.value = path.value
+        } else {
+            const { data, error } = await supabaseClient.storage.from('avatars').download(path.value)
+            if (error) throw error
+            src.value = URL.createObjectURL(data)
+        }
     } catch (error) {
         console.error('Error downloading image: ', error.message)
     }
@@ -30,7 +35,7 @@ const uploadAvatar = async (evt) => {
         const fileExt = file.name.split('.').pop()
         const filePath = `${Math.random()}.${fileExt}`
 
-        let { error: uploadErr } = await supabaseClient.storage.from('avatar').upload(filePath, file)
+        let { error: uploadErr } = await supabaseClient.storage.from('avatars').upload(filePath, file)
         if (uploadErr) throw uploadErr
         emit('update:path', filePath)
         emit('upload')
